@@ -1,0 +1,88 @@
+# reference
+# https://www.home-assistant.io/integrations/sensor.mqtt/
+# device classes: https://www.home-assistant.io/integrations/sensor/#device-class
+# State template: https://forum.hacf.fr/t/unites-de-mesure/64577/8
+
+- unique_id: jkbms-battery-voltage
+  name: jkbms battery voltage
+  device:
+    identifiers: jkbms
+    name: jkbms-battery
+    model: jkbms battery controler
+    model_id: jkbms-active-balancing
+  state_class: measurement
+  device_class: voltage
+  unit_of_measurement: V
+  state_topic: jkbms/battery-voltage
+  value_template: "{{ value_json.data | float / 1000 | round(3) }}"
+  enabled_by_default: true
+
+- unique_id: jkbms-battery-current
+  name: jkbms battery current
+  device:
+    identifiers: jkbms
+    name: jkbms-battery
+    model: jkbms battery controler
+    model_id: jkbms-active-balancing
+  state_class: measurement
+  device_class: current
+  unit_of_measurement: A
+  state_topic: jkbms/battery-current
+  value_template: "{{ ( value_json.data | float /  1000 ) | round(3) }}"
+  enabled_by_default: true
+
+- unique_id: jkbms-soc-remaining
+  name: jkbms SOC in %
+  device:
+    identifiers: jkbms
+    name: jkbms-battery
+    model: jkbms battery controler
+    model_id: jkbms-active-balancing
+  device_class: battery
+  state_class: measurement
+  unit_of_measurement: "%"
+  state_topic: jkbms/soc-percent-remaining
+  value_template: "{{ value_json.data | int }}"
+  enabled_by_default: true
+
+- unique_id: jkbms-soc-capacity
+  name: jkbms battery SOC capacity
+  device:
+    identifiers: jkbms
+    name: jkbms-battery
+    model: jkbms battery controler
+    model_id: jkbms-active-balancing
+  state_class: measurement
+  device_class: energy
+  unit_of_measurement: Wh
+  state_topic: jkbms/soc-cap-remaining
+  value_template: "{{ ( (value_json.data | float / 1000 ) * sensor.jkbms_meeter_jkbms_battery_voltage | float ) | round(3) }}"
+  enabled_by_default: true
+
+- unique_id: jkbms-battery-temperature
+  name: jkbms battery current
+  device:
+    identifiers: jkbms
+    name: jkbms-battery
+    model: jkbms battery controler
+    model_id: jkbms-active-balancing
+  state_class: measurement
+  device_class: temperature
+  unit_of_measurement: °C
+  state_topic: jkbms/bat-temp
+  value_template: "{{ value_json.data | float / 10  }}" 
+  enabled_by_default: true
+
+- unique_id: jkbms-cells-voltage
+  name: jkbms cells voltage
+  device:
+    identifiers: jkbms
+    name: jkbms-battery
+    model: jkbms battery controler
+    model_id: jkbms-active-balancing
+  device_class: voltage
+  unit_of_measurement: mV
+  state_topic: jkbms/cells-voltage
+  value_template: "{{ value_json.data | list }}"
+  enabled_by_default: true
+

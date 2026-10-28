@@ -1,0 +1,52 @@
+# mosquitto_sub  -h localhost -u linky -P '!GizKoz007' -t 'bat1/#' -v
+# secret located at: /etc/secrets/mqtt.secrets
+broker-host: "localhost"
+broker-user: $LINKY_USR
+broker-pwd: $LINKY_PWD
+broker-port: 1883
+client-id: afb-jkbms
+publish-topic: jkbms
+mapping-type: topic-pair
+publish-extend: true
+to-mqtt:
+  event:
+    # auto-register to following events
+    registrations:
+      - api: jkbms
+        verb: bat1/cells-voltage
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/battery-voltage
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/battery-power
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/battery-current
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/soc-percent-remaining
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/soc-cap-remaining
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/soc-cycle-count
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/soc-soh
+        args:
+          action: subscribe
+      - api: jkbms
+        verb: bat1/bat-temp
+        args:
+          action: subscribe
+    template:
+      data: "%{data}"

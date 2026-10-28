@@ -1,0 +1,164 @@
+# jkbms V60 Modbus mapping
+# Author Fulup Ar foll
+# Date: nov-2025
+# Model: jkbms 
+# Ref: 
+#  - https://cleversolarpower.com/jk-bms-settings/
+#  - https://github.com/phinix-org/Multiple-JK-BMS-by-Modbus-RS485
+
+# Low level debug modbus (when nothing works)
+# --------------------------------------------
+# generate custom request https://npulse.net/en/online-modbus
+# echo -ne "\x01\x03\x\x01\x\x02\x95\xCB" | socat - /dev/ttyUSB0,b24 | od -t x1
+# echo -ne "\x01\x03\x\x01\x\x02\x95\xCB" | socat - tcp4:192.168.1.69:8886 | od -t x1
+name: afb-jkbms
+no-ldpaths: true
+port: 1241
+alias:
+  - /devtools:/usr/share/afb-ui-devtools/binder
+  - /:/usr/share/afb-ui-devtools/binder
+
+extension:
+- path: "/usr/local/lib/libafb-mqtt-ext.so"
+"@extconfig":
+  MQTT:
+    config: { "$ref": "/home/fulup/Workspace/Tux-Solar/jkbms-battery/etc/mqtt-jkbms.battery.yaml" }
+
+binding:
+  # - path: /usr/redpesk/modbus-binding/lib/modbus-binding.so
+  - path: /usr/local/redpesk/modbus-binding/lib/modbus-binding.so
+    metadata:
+      uid: jkbms-meeter
+      version: "1.0"
+      api: jkbms
+      info: JK-BMS & Battery monitoring 
+    uri: tty://dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A9B94MWP-if00-port0:115200
+    modbus:
+      uid: bat1
+      info: jkbms battery monitoring
+      # Dip switch configuration of a single pack setup on UART2 / address 0x01
+      #  1    2    4    5
+      #  on, off, off, off (0x01)
+      slaveid: 1
+      timeout: 250
+      period_s: 10
+      idle: 100
+      sensors:
+        - uid: vol-smart-sleep
+          info: Entering sleep voltage (mV) 
+          type: Register_Holding
+          format: UINT32
+          register: 0x1000
+        - uid: vol-cell-uv
+          info: Cell undervoltage protection (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1004
+        - uid: vol-cell-ov
+          info: cell over charge protection (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1004
+        - uid: soc-100%
+          info: SOC 100% voltage (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1018
+        - uid: soc-0%
+          info: SOC 0% voltage (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x101C
+        - uid: vol-cell-rcv
+          info: Recommanded Charging Voltage (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1020
+        - uid: vol-cell-rfv
+          info: Float Charge Voltage (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1024
+        - uid: vol-pwr-off
+          info: Automatic Shutdown voltage (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1028
+        - uid: cell-count
+          info: Cell Count
+          type: Register_Holding
+          format: UINT32
+          register: 0x106C
+        - uid: cap-bat-cell
+          info: Battery design capacity (mHA)
+          type: Register_Holding
+          format: UINT32
+          register: 0x107C
+        - uid: balance-switch
+          info: Balance switch on/off
+          type: Register_Holding
+          format: Bool
+          register: 0x1078
+        - uid: balance-vol-start
+          info: Balanced start voltage (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1084
+        - uid: balance-current-max
+          info: Maximum balancing current (mA)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1048
+        - uid: balance-voltage-difference
+          info: Trigger balanced voltage difference (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1014
+        - uid: cells-voltage
+          info: Cell voltage (mV)
+          type: Register_Holding
+          format: UINT16
+          register: 0x1200
+          count: 16
+        - uid: battery-voltage 
+          info: Battery toal voltage (mV)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1290
+        - uid: battery-power
+          info: Battery Power (mW)
+          type: Register_Holding
+          format: UINT32
+          register: 0x1294
+        - uid: battery-current (mA)
+          info: Battery current
+          type: Register_Holding
+          format: INT32
+          register: 0x1298
+        - uid: soc-percent-remaining
+          info: SOC State of Charge %
+          type: Register_Holding
+          format: INT16
+          register: 0x12A6
+        - uid: soc-cap-remaining
+          info: Remaining capacity (mAH)
+          type: Register_Holding
+          format: INT16
+          register: 0x12A8
+        - uid: soc-cycle-count
+          info: Number cycle
+          type: Register_Holding
+          format: UINT32
+          register: 0x12B0
+        - uid: soc-soh
+          info: Estimatique SOH %
+          type: Register_Holding
+          format: UINT16
+          register: 0x12B8
+        - uid: bat-temp
+          info: Battery temperature (0.1°C)
+          type: Register_Holding
+          format: UINT16
+          register: 0x12F8
+          count: 3
+
