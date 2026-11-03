@@ -1,0 +1,99 @@
+views:
+  - type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: New section
+          - type: statistics-graph
+            entities:
+              - sensor.inverter_bms_battery_soc
+            days_to_show: 1
+            period: hour
+            chart_type: line
+            stat_types:
+              - mean
+          - type: statistics-graph
+            entities:
+              - sensor.jkbms_meeter_jkbms_battery_voltage
+            days_to_show: 1
+            period: hour
+            chart_type: line
+            stat_types:
+              - mean
+          - type: statistics-graph
+            entities:
+              - sensor.jkbms_meeter_jkbms_battery_current
+            days_to_show: 1
+            period: hour
+            chart_type: line
+            stat_types:
+              - mean
+          - type: custom:mini-graph-card
+            hours_to_show: 12
+            update_interval: 60
+            points_per_hour: 60
+            hour24: true
+            line_width: 2
+            align_header: left
+            entities:
+              - entity: sensor.jkbms_battery_jkbms_cell0_voltage
+                name: cell-0
+              - entity: sensor.jkbms_battery_jkbms_cell1_voltage
+                name: cell-1
+              - entity: sensor.jkbms_battery_jkbms_cell2_voltage
+                name: cell-2
+              - entity: sensor.jkbms_battery_jkbms_cell3_voltage
+                name: cell-3
+              - entity: sensor.jkbms_battery_jkbms_cell4_voltage
+                name: cell-4
+              - entity: sensor.jkbms_battery_jkbms_cell5_voltage
+                name: cell-5
+              - entity: sensor.jkbms_battery_jkbms_cell6_voltage
+                name: cell-6
+              - entity: sensor.jkbms_battery_jkbms_cell7_voltage
+                name: cell-7
+              - entity: sensor.jkbms_battery_jkbms_cell8_voltage
+                name: cell-8
+              - entity: sensor.jkbms_battery_jkbms_cell9_voltage
+                name: cell-9
+              - entity: sensor.jkbms_battery_jkbms_cell10_voltage
+                name: cell-10
+              - entity: sensor.jkbms_battery_jkbms_cell11_voltage
+                name: cell-11
+            show:
+              labels: true
+              labels_secondary: true
+          - type: statistics-graph
+            entities:
+              - sensor.jkbms_battery_cells_voltage_diff
+            days_to_show: 1
+            period: hour
+            chart_type: line
+            stat_types:
+              - mean
+          - type: statistics-graph
+            entities:
+              - sensor.jkbms_battery_jkbms_battery_current
+            days_to_show: 1
+            period: hour
+            chart_type: line
+            stat_types:
+              - mean
+          - type: tile
+            entity: sensor.jkbms_battery_jkbms_soc_in
+          - type: tile
+            entity: sensor.jkbms_battery_cells_voltage_diff
+          - type: tile
+            entity: sensor.jkbms_meeter_jkbms_battery_current
+          - type: custom:mini-graph-card
+            hours_to_show: 12
+            update_interval: 60
+            points_per_hour: 60
+            entities:
+              - sensor.jkbms_battery_jkbms_cells_voltage
+            show:
+              labels: true
+              labels_secondary: true
+        column_span: 2
+
